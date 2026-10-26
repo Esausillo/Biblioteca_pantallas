@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Biblioteca UTNG - Pantallas</title>
+<style>
+  :root{
+    --azul:#3b82f6; --azul-osc:#0d47c0; --azul-txt:#1e4fa8;
+    --gris-fondo:#f2f2f2; --gris-borde:#c9ccd1; --gris-btn:#e6e6e6;
+    --turquesa:#a5cedd; --lavanda:#e8ecf5; --verde:#22c55e;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Segoe UI",Tahoma,Arial,sans-serif;font-size:14px;color:#222;background:#fff}
+
+  /* Selector de pantallas (solo para navegar entre ellas) */
+  .selector{display:flex;flex-wrap:wrap;gap:6px;padding:10px 16px;background:#2b2b2b;position:sticky;top:0;z-index:10}
+  .selector button{font:inherit;color:#ddd;background:#444;border:0;border-radius:4px;padding:6px 10px;cursor:pointer}
+  .selector button.on{background:var(--azul);color:#fff}
+
+  .pantalla{display:none;max-width:860px;margin:24px auto;background:var(--gris-fondo)}
+  .pantalla.on{display:block}
+  .barra{background:var(--azul);color:#fff;font-weight:700;font-size:26px;padding:12px 18px}
+
+  /* Botones y campos comunes */
+  button,input,select{font:inherit}
+  input,select{width:100%;height:30px;padding:0 8px;border:1px solid var(--gris-borde);border-radius:3px;background:#fff}
+  input:focus,select:focus,button:focus-visible{outline:2px solid var(--azul);outline-offset:1px}
+  label{display:block;margin-bottom:4px;color:#444}
+  .btn{background:var(--gris-btn);border:1px solid var(--gris-borde);border-radius:3px;padding:6px 14px;cursor:pointer;color:#333}
+  .btn:hover{background:#dcdcdc}
+  .btn.activo{background:var(--azul);border-color:var(--azul);color:#fff;font-weight:700}
+  .menu{display:flex;gap:10px;flex-wrap:wrap;padding:20px 24px 12px}
+
+  /* 1. Login */
+  #login{background:#4d4d4d;padding:8px}
+  #login .area{background:#dfe0e6;min-height:420px;display:flex;justify-content:center;align-items:flex-start;padding:16px}
+  #login .barra{font-size:24px}
+  .tarjeta{background:#f8f8f8;width:min(100%,270px);padding:34px 20px 36px;margin-top:0}
+  .tarjeta h1{margin:0 0 14px;text-align:center;color:var(--azul-txt);font-size:22px}
+  .tarjeta hr{border:0;border-top:2px solid #5b83c8;margin:0 0 18px}
+  .tarjeta label{font-weight:700;font-size:12px}
+  .tarjeta .campo{margin-bottom:14px;padding:0 6px}
+  .btn-ingresar{display:block;width:calc(100% - 12px);margin:22px 6px 0;height:30px;background:var(--azul-osc);color:#fff;border:0;border-radius:3px;font-weight:700;cursor:pointer}
+  .btn-ingresar:hover{background:#0a3a9f}
+
+  /* 2. Busqueda */
+  .cuerpo-busq{display:grid;grid-template-columns:1fr 150px;gap:16px;padding:0 24px 24px}
+  .panel-busq{background:var(--lavanda);padding:12px}
+  .panel-busq h3{margin:0 0 6px;font-size:15px}
+  .tipo{display:grid;grid-template-columns:1fr 1fr;margin-bottom:14px}
+  .tipo button{height:34px;border:0;background:#fff;font-weight:700;cursor:pointer}
+  .tipo button.on{background:var(--azul);color:#fff}
+  .caja-campos{background:#eef1f8;padding:14px 16px 40px}
+  .caja-campos .fila{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+  .caja-campos label{font-weight:700}
+  .acciones{background:var(--lavanda);padding:12px;display:flex;flex-direction:column;gap:12px;align-self:start}
+  .acciones h3{margin:8px 0 2px;text-align:center;font-size:16px}
+  .acciones .btn{width:100%;color:var(--azul-txt)}
+  .acciones .btn.nueva{color:#2f9e55}
+  .avanzada{display:none}
+
+  /* 3 y 5. Formularios de registro */
+  .titulo-seccion{font:16px "Times New Roman",serif;margin:0;padding:6px 24px;background:#fff}
+  .form-turq{background:var(--turquesa);margin:0 0 0;padding:6px 8px 16px}
+  .form-lav{background:var(--lavanda);margin:0;padding:6px 8px 16px}
+  .form-turq h4,.form-lav h4{margin:6px 0;text-align:center;font-weight:400}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:6px 28px}
+  .grid3 label{margin-bottom:6px}
+  .grid3 .c{text-align:center}
+  .pie{text-align:center;padding:14px 0 28px}
+  .btn-verde{background:var(--verde);border:0;color:#fff;font-weight:700;padding:6px 14px;border-radius:3px;cursor:pointer}
+  .btn-verde:hover{background:#16a34a}
+
+  /* 4. Lista */
+  .tabla-wrap{margin:8px 24px 0;border:1px solid var(--gris-borde);background:#fff;overflow-x:auto}
+  table{width:100%;border-collapse:collapse;min-width:560px}
+  th{background:#e9e9e9;font-weight:700;padding:8px 6px;border-right:1px solid var(--gris-borde);text-align:center}
+  td.vacio{height:190px;text-align:center;color:#555}
+
+  /* 6. Prestamos */
+  .prest h2{font-style:italic;font-size:15px;text-align:center;margin:0}
+  .prest .datos{font-weight:700;margin:0 0 0 18px}
+  .prest-form{padding:10px 18px 24px}
+  .prest-form label{color:#444}
+  .f3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:10px 0 18px}
+  .fila-flex{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+  .fila-flex label{margin:0;white-space:nowrap}
+  .fila-flex.sep{gap:24px}
+  .fila-flex .grow{flex:1}
+  .estado{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .estado select{flex:1;min-width:160px}
+  .estado .btns{display:flex;gap:10px;margin-left:auto}
+
+  @media (max-width:640px){
+    .cuerpo-busq{grid-template-columns:1fr}
+    .grid3,.f3{grid-template-columns:1fr}
+    .fila-flex{flex-wrap:wrap}
+  }
+</style>
+</head>
+<body>
+
+<nav class="selector" aria-label="Pantallas">
+  <button data-ir="login" class="on">Login</button>
+  <button data-ir="busqueda">Búsqueda</button>
+  <button data-ir="usuarios">Registro de usuarios</button>
+  <button data-ir="lista">Lista</button>
+  <button data-ir="biblio">Registro de bibliotecarios</button>
+  <button data-ir="prestamos">Préstamos</button>
+</nav>
+
+<!-- 1. LOGIN -->
+<main class="pantalla on" id="login">
+  <div class="barra">Biblioteca</div>
+  <div class="area">
+    <form class="tarjeta" onsubmit="event.preventDefault();ir('busqueda')">
+      <h1>Biblioteca</h1>
+      <hr>
+      <div class="campo"><label for="usr">Usuario</label><input id="usr" type="text" autocomplete="username"></div>
+      <div class="campo"><label for="pwd">Contraseña</label><input id="pwd" type="password" autocomplete="current-password"></div>
+      <button class="btn-ingresar" type="submit">Ingresar</button>
+    </form>
+  </div>
+</main>
+
+<!-- 2. BUSQUEDA -->
+<main class="pantalla" id="busqueda">
+  <div class="barra">UTNG</div>
+  <div class="menu">
+    <button class="btn">Búsqueda general</button>
+    <button class="btn">Búsqueda temática</button>
+    <button class="btn">Nuestra biblioteca</button>
+  </div>
+  <div class="cuerpo-busq">
+    <section class="panel-busq">
+      <h3>Tipo de busqueda</h3>
+      <div class="tipo">
+        <button class="on" id="t-libre">Búsqueda libre</button>
+        <button id="t-avanz">Búsqueda avanzada</button>
+      </div>
+      <div class="caja-campos">
+        <label for="expr">Expresion a buscar</label>
+        <input id="expr" type="text" placeholder="Escribe aquí una o varias palabras clave...">
+        <div class="fila">
+          <div><label for="cant">Cantidad de elemento a buscar</label><input id="cant" type="number" value="100" min="1"></div>
+          <div><label for="mat">Tipo de material</label><input id="mat" type="text"></div>
+        </div>
+        <div class="fila avanzada" id="avanz">
+          <div><label for="autor">Autor</label><input id="autor" type="text"></div>
+          <div><label for="anio">Año de publicación</label><input id="anio" type="text"></div>
+        </div>
+      </div>
+    </section>
+    <aside class="acciones">
+      <h3>Acciones</h3>
+      <button class="btn">Buscar</button>
+      <button class="btn">Mostrar fichas</button>
+      <button class="btn" onclick="ir('login')">Regresar</button>
+      <button class="btn" id="limpiar">Limpiar</button>
+      <button class="btn nueva">Nueva búsqueda</button>
+    </aside>
+  </div>
+</main>
+
+<!-- 3. REGISTRO DE USUARIOS -->
+<main class="pantalla" id="usuarios">
+  <h2 class="titulo-seccion">Registro de usuarios</h2>
+  <div class="barra">UTNG</div>
+  <div class="menu">
+    <button class="btn activo" data-ir="usuarios">Registro Usuarios</button>
+    <button class="btn" data-ir="biblio">Registro Blibiotecario</button>
+    <button class="btn" data-ir="lista">Lista Usuarios y Blibliotecarios</button>
+  </div>
+  <form class="form-turq" onsubmit="event.preventDefault()">
+    <h4>Datos</h4>
+    <div class="grid3">
+      <div><label for="u-nom">Nombre/s:</label><input id="u-nom"></div>
+      <div><label class="c" for="u-ap">Apellido Paterno:</label><input id="u-ap"></div>
+      <div><label class="c" for="u-am">Apellido Materno:</label><input id="u-am"></div>
+      <div><label for="u-mail">Correo:</label><input id="u-mail" type="email"></div>
+      <div><label class="c" for="u-tel">Telefono:</label><input id="u-tel" type="tel"></div>
+      <div></div>
+    </div>
+    <h4 style="margin-top:20px">Carrera</h4>
+    <div class="grid3">
+      <div><label for="u-area">Área:</label><input id="u-area"></div>
+      <div><label for="u-gpo">Grupo:</label><input id="u-gpo"></div>
+      <div><label class="c" for="u-ctl">No. Control:</label><input id="u-ctl"></div>
+    </div>
+  </form>
+  <div class="pie"><button class="btn">Confirmar</button></div>
+</main>
+
+<!-- 4. LISTA -->
+<main class="pantalla" id="lista">
+  <div class="barra">UTNG</div>
+  <div class="menu">
+    <button class="btn" data-ir="usuarios">Registro Usuarios</button>
+    <button class="btn" data-ir="biblio">Registro Blibiotecario</button>
+    <button class="btn" data-ir="lista">Lista Usuarios y Blibliotecarios</button>
+  </div>
+  <div class="tabla-wrap">
+    <table>
+      <thead><tr>
+        <th>Nombre/s</th><th>Apellido P</th><th>Apellido M</th><th>Telefono</th><th>Correo</th><th>Área</th><th>Grupo</th>
+      </tr></thead>
+      <tbody><tr><td class="vacio" colspan="7">Tabla sin contenido</td></tr></tbody>
+    </table>
+  </div>
+  <div class="pie"><button class="btn">Confirmar</button></div>
+</main>
+
+<!-- 5. REGISTRO DE BIBLIOTECARIOS -->
+<main class="pantalla" id="biblio">
+  <h2 class="titulo-seccion">Registro bibliotecarios</h2>
+  <div class="barra">UTNG</div>
+  <div class="menu">
+    <button class="btn" data-ir="usuarios">Registro Usuarios</button>
+    <button class="btn activo" data-ir="biblio">Registro Blibiotecario</button>
+    <button class="btn" data-ir="lista">Lista Usuarios y Blibliotecarios</button>
+  </div>
+  <form class="form-lav" onsubmit="event.preventDefault()">
+    <h4>Datos</h4>
+    <div class="grid3">
+      <div><label for="b-nom">Nombre/s:</label><input id="b-nom"></div>
+      <div><label class="c" for="b-ap">Apellido Paterno:</label><input id="b-ap"></div>
+      <div><label class="c" for="b-am">Apellido Materno:</label><input id="b-am"></div>
+      <div><label for="b-mail">Correo:</label><input id="b-mail" type="email"></div>
+      <div><label class="c" for="b-tel">Telefono:</label><input id="b-tel" type="tel"></div>
+      <div><label class="c" for="b-area">Área:</label><input id="b-area"></div>
+    </div>
+  </form>
+  <div class="pie"><button class="btn-verde">Confirmar</button></div>
+</main>
+
+<!-- 6. PRESTAMOS -->
+<main class="pantalla prest" id="prestamos">
+  <div class="barra">UTNG</div>
+  <div class="menu" style="padding-bottom:0">
+    <button class="btn" style="width:170px">Prestamos</button>
+    <button class="btn" style="width:170px">Reportes</button>
+  </div>
+  <form class="prest-form" onsubmit="event.preventDefault()">
+    <p class="datos">Datos:</p>
+    <h2>"Prestamos"</h2>
+    <div class="f3">
+      <div><label for="p-nom">Nombre/s:</label><input id="p-nom"></div>
+      <div><label for="p-ap">Apellido Paterno:</label><input id="p-ap"></div>
+      <div><label for="p-am">Apellido Materno:</label><input id="p-am"></div>
+    </div>
+    <div class="fila-flex sep">
+      <label for="p-ctl">No. Control:</label><input class="grow" id="p-ctl">
+      <label for="p-gpo">Grupo:</label><input class="grow" id="p-gpo">
+    </div>
+    <div class="fila-flex">
+      <label for="p-libro">Nombre del libro:</label><input class="grow" id="p-libro">
+    </div>
+    <div class="fila-flex sep">
+      <label for="p-fr">Fecha de realizacion:</label><input class="grow" id="p-fr" type="date">
+      <label for="p-fe">Fecha de entrega:</label><input class="grow" id="p-fe" type="date">
+    </div>
+    <div class="estado">
+      <label for="p-estado">Estado del libro:</label>
+      <select id="p-estado">
+        <option value=""></option>
+        <option>Nuevo</option>
+        <option>Bueno</option>
+        <option>Regular</option>
+        <option>Dañado</option>
+      </select>
+      <div class="btns">
+        <button class="btn" type="reset">Cancelar</button>
+        <button class="btn" type="submit">Confirmar</button>
+      </div>
+    </div>
+  </form>
+</main>
+
+<script>
+  function ir(id){
+    document.querySelectorAll('.pantalla').forEach(p=>p.classList.toggle('on',p.id===id));
+    document.querySelectorAll('.selector button').forEach(b=>b.classList.toggle('on',b.dataset.ir===id));
+    window.scrollTo(0,0);
+  }
+  document.querySelectorAll('[data-ir]').forEach(b=>b.addEventListener('click',()=>ir(b.dataset.ir)));
+
+  // Búsqueda libre / avanzada
+  const libre=document.getElementById('t-libre'), avanz=document.getElementById('t-avanz');
+  function tipo(esAvanzada){
+    libre.classList.toggle('on',!esAvanzada);
+    avanz.classList.toggle('on',esAvanzada);
+    document.getElementById('avanz').style.display=esAvanzada?'grid':'none';
+  }
+  libre.onclick=()=>tipo(false);
+  avanz.onclick=()=>tipo(true);
+  document.getElementById('limpiar').onclick=()=>{
+    document.querySelectorAll('#busqueda input').forEach(i=>i.value=i.id==='cant'?'100':'');
+  };
+</script>
+</body>
+</html>
